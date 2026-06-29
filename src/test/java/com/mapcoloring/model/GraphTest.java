@@ -65,6 +65,31 @@ class GraphTest {
         assertEquals(2, g.getVertexCount());
         assertEquals("天津", g.getVertexName(0));
         assertEquals("河北", g.getVertexName(1));
+        assertEquals(1, g.getDegree(0));
+        assertTrue(contains(g.getNeighbors(0), 1));
+    }
+
+    @Test
+    void testRemoveEdge() {
+        Graph g = new Graph();
+        g.addVertex("A");
+        g.addVertex("B");
+        g.addEdge(0, 1);
+        assertEquals(1, g.getDegree(0));
+        g.removeEdge(0, 1);
+        assertEquals(0, g.getDegree(0));
+        assertEquals(0, g.getDegree(1));
+    }
+
+    @Test
+    void testAddEdgeDuplicatePrevention() {
+        Graph g = new Graph();
+        g.addVertex("A");
+        g.addVertex("B");
+        g.addEdge(0, 1);
+        g.addEdge(0, 1);
+        assertEquals(1, g.getDegree(0));
+        assertEquals(1, g.getDegree(1));
     }
 
     @Test
@@ -81,7 +106,7 @@ class GraphTest {
 
     private boolean contains(MyArrayList<Integer> list, int value) {
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i) == value) return true;
+            if (list.get(i).equals(value)) return true;
         }
         return false;
     }
