@@ -5,8 +5,8 @@ import json
 import sys
 import math
 
-def simplify(points, keep_every=3):
-    """Keep every Nth point to reduce polygon complexity."""
+def simplify(points, keep_every=1):
+    """Keep every Nth point to reduce polygon complexity. 1 = keep all."""
     if len(points) <= 30:
         return points
     result = points[::keep_every]
