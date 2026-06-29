@@ -1,0 +1,96 @@
+<h2>界面布局方案</h2>
+<p class="subtitle">单窗口双标签页：前台查看 + 后台管理</p>
+
+<div class="section">
+  <h3>标签页1：地图着色（前台）</h3>
+  <div class="mockup">
+    <div class="mockup-header">地图着色 - 用户查看界面</div>
+    <div class="mockup-body">
+      <div style="display:flex;gap:16px;">
+        <div style="flex:2;border:1px solid var(--border-color);border-radius:8px;padding:12px;min-height:280px;display:flex;align-items:center;justify-content:center;background:var(--bg-secondary);">
+          <span style="color:var(--text-muted);">地图画布区域 (Canvas)<br>中国/美国地图切换显示</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:12px;">
+          <div style="border:1px solid var(--border-color);border-radius:8px;padding:12px;">
+            <div class="label">地图选择</div>
+            <button class="mock-button">中国地图</button>
+            <button class="mock-button">美国地图</button>
+          </div>
+          <div style="border:1px solid var(--border-color);border-radius:8px;padding:12px;">
+            <div class="label">着色算法</div>
+            <button class="mock-button">贪心着色</button>
+            <button class="mock-button">贪心+排序</button>
+            <button class="mock-button">回溯求最优</button>
+          </div>
+          <div style="border:1px solid var(--border-color);border-radius:8px;padding:12px;">
+            <div class="label">统计信息</div>
+            <p style="margin:4px 0;font-size:13px;">颜色总数：<strong>4</strong></p>
+            <p style="margin:4px 0;font-size:13px;">算法耗时：<strong>12ms</strong></p>
+            <p style="margin:4px 0;font-size:13px;">各省颜色：<strong>见右侧列表</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>标签页2：数据管理（后台）</h3>
+  <div class="mockup">
+    <div class="mockup-header">数据管理 - 管理员维护界面</div>
+    <div class="mockup-body">
+      <div style="display:flex;gap:16px;">
+        <div style="flex:1;border:1px solid var(--border-color);border-radius:8px;padding:12px;">
+          <div class="label">省份列表</div>
+          <div style="border:1px solid var(--border-color);border-radius:4px;padding:8px;margin:8px 0;max-height:150px;overflow-y:auto;">
+            <p style="margin:2px 0;font-size:13px;">北京 [选中]</p>
+            <p style="margin:2px 0;font-size:13px;">天津</p>
+            <p style="margin:2px 0;font-size:13px;">河北</p>
+            <p style="margin:2px 0;font-size:13px;">...</p>
+          </div>
+          <button class="mock-button">添加省份</button>
+          <button class="mock-button">删除选中</button>
+        </div>
+        <div style="flex:2;border:1px solid var(--border-color);border-radius:8px;padding:12px;">
+          <div class="label">邻接关系编辑 - 北京</div>
+          <div style="display:flex;gap:12px;margin:8px 0;">
+            <div style="flex:1;border:1px solid var(--border-color);border-radius:4px;padding:8px;max-height:120px;overflow-y:auto;">
+              <p style="margin:2px 0;font-size:13px;">天津 ✓</p>
+              <p style="margin:2px 0;font-size:13px;">河北 ✓</p>
+            </div>
+            <div style="flex:1;border:1px solid var(--border-color);border-radius:4px;padding:8px;max-height:120px;overflow-y:auto;">
+              <p style="margin:2px 0;font-size:13px;">山东 [未连接]</p>
+              <p style="margin:2px 0;font-size:13px;">河南 [未连接]</p>
+            </div>
+          </div>
+          <button class="mock-button">连接选中</button>
+          <button class="mock-button">断开选中</button>
+          <div style="margin-top:12px;">
+            <button class="mock-button">保存到文件</button>
+            <button class="mock-button">重新加载</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <p>选择你的偏好：</p>
+  <div class="options">
+    <div class="option" data-choice="a" onclick="toggleSelect(this)">
+      <div class="letter">A</div>
+      <div class="content">
+        <h3>这个布局可以</h3>
+        <p>左侧地图 + 右侧控制面板 + 后台管理两个面板</p>
+      </div>
+    </div>
+    <div class="option" data-choice="b" onclick="toggleSelect(this)">
+      <div class="letter">B</div>
+      <div class="content">
+        <h3>需要调整</h3>
+        <p>在终端告诉我哪里需要改</p>
+      </div>
+    </div>
+  </div>
+</div>

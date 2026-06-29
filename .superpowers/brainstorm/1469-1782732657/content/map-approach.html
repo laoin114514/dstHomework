@@ -1,0 +1,38 @@
+<h2>三种地图可视化方案对比</h2>
+<p class="subtitle">选择一个地图渲染方案，这会影响数据准备工作和视觉效果</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>简化几何地图（推荐）</h3>
+      <p>每个省/州存储简化多边形顶点坐标，JavaFX Canvas 绑制真实地理形状。地图看起来像真实地图，所有数据自包含在文件中。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>地理形状可辨识</li><li>完全自实现，无外部依赖</li><li>展示效果好，答辩加分</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>需手写 ~84 个省/州坐标数据</li></ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>抽象图布局</h3>
+      <p>不关心真实地理位置，用力导向或圆形布局排列省份节点，连线表示邻接关系。侧重展示图结构和着色逻辑。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>无需地理坐标数据，开发快</li><li>算法结构更清晰</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>不像"地图"，视觉冲击力弱</li><li>答辩效果一般</li></ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>底图+着色叠加</h3>
+      <p>加载静态地图图片作背景，定义各省份的可点击区域，半透明叠加着色结果。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>最像真实地图</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>区域边界难精确定义</li><li>交互实现复杂</li><li>依赖外部图片资源</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
