@@ -784,8 +784,13 @@ public class MapFileHandler {
                 } else if ("EDGES".equals(parts[0])) {
                     int from = Integer.parseInt(parts[1]);
                     for (int i = 2; i < parts.length; i++) {
-                        int to = Integer.parseInt(parts[i]);
-                        data.addAdjacency(from, to);
+                        String[] subParts = parts[i].split(",");
+                        for (String s : subParts) {
+                            if (!s.isEmpty()) {
+                                int to = Integer.parseInt(s);
+                                data.addAdjacency(from, to);
+                            }
+                        }
                     }
                 }
             }
