@@ -1,7 +1,6 @@
 package com.mapcoloring.ui;
 
 import com.mapcoloring.model.MapData;
-import com.mapcoloring.model.MyArrayList;
 import com.mapcoloring.model.Point;
 import com.mapcoloring.model.Province;
 import javafx.scene.canvas.Canvas;
@@ -29,9 +28,36 @@ public class MapCanvas extends Canvas {
     private double lastMouseX, lastMouseY;
     private int highlightedIndex = -1;
 
-    public MapCanvas(double width, double height) {
-        super(width, height);
+    public MapCanvas() {
         setupMouseHandlers();
+        widthProperty().addListener(e -> onResize());
+        heightProperty().addListener(e -> onResize());
+    }
+
+    @Override
+    public boolean isResizable() {
+        return true;
+    }
+
+    @Override
+    public double prefWidth(double height) {
+        return 600;
+    }
+
+    @Override
+    public double prefHeight(double width) {
+        return 500;
+    }
+
+    private void onResize() {
+        double w = getWidth();
+        double h = getHeight();
+        if (w > 0 && h > 0) {
+            setWidth(w);
+            setHeight(h);
+            fitToCanvas();
+            draw();
+        }
     }
 
     public void setMapData(MapData data) {
@@ -42,6 +68,10 @@ public class MapCanvas extends Canvas {
 
     private void fitToCanvas() {
         if (mapData == null || mapData.provinces.size() == 0) return;
+        double w = getWidth();
+        double h = getHeight();
+        if (w <= 0 || h <= 0) return;
+
         double minX = Double.MAX_VALUE, minY = Double.MAX_VALUE;
         double maxX = Double.MIN_VALUE, maxY = Double.MIN_VALUE;
 
@@ -58,18 +88,20 @@ public class MapCanvas extends Canvas {
 
         double dataW = maxX - minX;
         double dataH = maxY - minY;
-        double padding = 40;
-        scale = Math.min(
-            (getWidth() - padding * 2) / dataW,
-            (getHeight() - padding * 2) / dataH);
+        double padding = 30;
+        scale = Math.min((w - padding * 2) / dataW, (h - padding * 2) / dataH);
         offsetX = -minX * scale + padding;
         offsetY = -minY * scale + padding;
     }
 
     public void draw() {
         if (mapData == null) return;
+        double w = getWidth();
+        double h = getHeight();
+        if (w <= 0 || h <= 0) return;
+
         GraphicsContext gc = getGraphicsContext2D();
-        gc.clearRect(0, 0, getWidth(), getHeight());
+        gc.clearRect(0, 0, w, h);
 
         for (int i = 0; i < mapData.provinces.size(); i++) {
             Province p = mapData.provinces.get(i);
@@ -109,7 +141,7 @@ public class MapCanvas extends Canvas {
             }
             cx /= p.polygon.size();
             cy /= p.polygon.size();
-            gc.setFont(new Font("Microsoft YaHei", 11));
+            gc.setFont(new Font("Microsoft YaHei", Math.max(10, scale * 0.18)));
             gc.setFill(Color.BLACK);
             gc.fillText(p.name, cx - 15, cy + 4);
         }
@@ -178,9 +210,5 @@ public class MapCanvas extends Canvas {
 
     public MapData getMapData() {
         return mapData;
-    }
-
-    public int getHighlightedIndex() {
-        return highlightedIndex;
     }
 }

@@ -20,7 +20,7 @@ public class FrontPanel extends BorderPane {
     private Label algoLabel;
 
     public FrontPanel() {
-        canvas = new MapCanvas(780, 560);
+        canvas = new MapCanvas();
         setCenter(canvas);
 
         VBox rightPanel = createRightPanel();
