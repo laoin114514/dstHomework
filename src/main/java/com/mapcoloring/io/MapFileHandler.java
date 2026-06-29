@@ -52,8 +52,21 @@ public class MapFileHandler {
                 if ("PROVINCE".equals(parts[0])) {
                     Province p = new Province();
                     p.id = Integer.parseInt(parts[1]);
-                    p.name = parts[2];
-                    for (int i = 3; i < parts.length; i++) {
+
+                    // Build name from tokens before the first coordinate (has comma)
+                    int coordStart = 2;
+                    while (coordStart < parts.length
+                            && !parts[coordStart].contains(",")) {
+                        coordStart++;
+                    }
+                    StringBuilder nameBuilder = new StringBuilder();
+                    for (int i = 2; i < coordStart; i++) {
+                        if (i > 2) nameBuilder.append(" ");
+                        nameBuilder.append(parts[i]);
+                    }
+                    p.name = nameBuilder.toString();
+
+                    for (int i = coordStart; i < parts.length; i++) {
                         String[] coord = parts[i].split(",");
                         Point pt = new Point(
                             Double.parseDouble(coord[0]),
