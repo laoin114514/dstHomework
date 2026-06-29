@@ -4,11 +4,14 @@ import com.mapcoloring.model.MapData;
 import com.mapcoloring.model.Point;
 import com.mapcoloring.model.Province;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class MapFileHandler {
 
     public static void save(MapData data, String filePath) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+        try (BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(
+                    new FileOutputStream(filePath), StandardCharsets.UTF_8))) {
             for (int i = 0; i < data.provinces.size(); i++) {
                 Province p = data.provinces.get(i);
                 writer.write("PROVINCE " + p.id + " " + p.name);
@@ -35,7 +38,9 @@ public class MapFileHandler {
 
     public static MapData load(String filePath) {
         MapData data = new MapData();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                    new FileInputStream(filePath), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
