@@ -7,6 +7,7 @@ import com.mapcoloring.model.Province;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class MapCanvas extends Canvas {
 
@@ -108,6 +109,7 @@ public class MapCanvas extends Canvas {
             }
             cx /= p.polygon.size();
             cy /= p.polygon.size();
+            gc.setFont(new Font("Microsoft YaHei", 11));
             gc.setFill(Color.BLACK);
             gc.fillText(p.name, cx - 15, cy + 4);
         }
