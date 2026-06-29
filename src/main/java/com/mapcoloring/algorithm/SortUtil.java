@@ -34,8 +34,7 @@ public class SortUtil {
         return -1;
     }
 
-    public static int findSmallestUnusedColor(
-            MyArrayList<Integer> neighborColors) {
+    public static int findSmallestUnusedColor(MyArrayList<Integer> neighborColors) {
         int color = 1;
         while (true) {
             if (linearSearch(neighborColors, color) == -1) {
