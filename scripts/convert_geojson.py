@@ -5,7 +5,7 @@ import json
 import sys
 import math
 
-def simplify(points, keep_every=4):
+def simplify(points, keep_every=3):
     """Keep every Nth point to reduce polygon complexity."""
     if len(points) <= 30:
         return points
@@ -14,7 +14,7 @@ def simplify(points, keep_every=4):
         result.append(points[-1])
     return result
 
-def detect_adjacency(regions, tolerance=0.8):
+def detect_adjacency(regions, tolerance=0.15):
     """Detect which regions share a boundary (have nearby points)."""
     for i in range(len(regions)):
         for j in range(i + 1, len(regions)):
