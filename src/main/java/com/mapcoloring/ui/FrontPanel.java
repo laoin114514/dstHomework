@@ -7,7 +7,6 @@ import com.mapcoloring.algorithm.SortedGreedyColoring;
 import com.mapcoloring.io.MapFileHandler;
 import com.mapcoloring.model.MapData;
 import javafx.geometry.Insets;
-import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -28,8 +27,8 @@ public class FrontPanel extends BorderPane {
         setRight(rightPanel);
         BorderPane.setMargin(rightPanel, new Insets(10));
 
-        // 延迟加载，等窗口显示后 canvas 才有实际尺寸
-        Platform.runLater(this::loadChina);
+        // 自动加载中国地图（layoutChildren 会处理初始渲染）
+        loadChina();
     }
 
     private VBox createRightPanel() {

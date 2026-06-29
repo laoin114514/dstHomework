@@ -5,10 +5,11 @@ import com.mapcoloring.model.Point;
 import com.mapcoloring.model.Province;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class MapCanvas extends Canvas {
+public class MapCanvas extends Pane {
 
     private static final Color[] PALETTE = {
         Color.rgb(255, 179, 186),
@@ -21,6 +22,7 @@ public class MapCanvas extends Canvas {
         Color.rgb(255, 200, 220),
     };
 
+    private final Canvas canvas;
     private MapData mapData;
     private double scale = 1.0;
     private double offsetX = 0;
@@ -29,32 +31,18 @@ public class MapCanvas extends Canvas {
     private int highlightedIndex = -1;
 
     public MapCanvas() {
+        canvas = new Canvas();
+        getChildren().add(canvas);
         setupMouseHandlers();
-        widthProperty().addListener(e -> onResize());
-        heightProperty().addListener(e -> onResize());
     }
 
     @Override
-    public boolean isResizable() {
-        return true;
-    }
-
-    @Override
-    public double prefWidth(double height) {
-        return 600;
-    }
-
-    @Override
-    public double prefHeight(double width) {
-        return 500;
-    }
-
-    private void onResize() {
+    protected void layoutChildren() {
         double w = getWidth();
         double h = getHeight();
         if (w > 0 && h > 0) {
-            setWidth(w);
-            setHeight(h);
+            canvas.setWidth(w);
+            canvas.setHeight(h);
             fitToCanvas();
             draw();
         }
@@ -68,8 +56,8 @@ public class MapCanvas extends Canvas {
 
     private void fitToCanvas() {
         if (mapData == null || mapData.provinces.size() == 0) return;
-        double w = getWidth();
-        double h = getHeight();
+        double w = canvas.getWidth();
+        double h = canvas.getHeight();
         if (w <= 0 || h <= 0) return;
 
         double minX = Double.MAX_VALUE, minY = Double.MAX_VALUE;
@@ -96,11 +84,11 @@ public class MapCanvas extends Canvas {
 
     public void draw() {
         if (mapData == null) return;
-        double w = getWidth();
-        double h = getHeight();
+        double w = canvas.getWidth();
+        double h = canvas.getHeight();
         if (w <= 0 || h <= 0) return;
 
-        GraphicsContext gc = getGraphicsContext2D();
+        GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, w, h);
 
         for (int i = 0; i < mapData.provinces.size(); i++) {
@@ -148,7 +136,7 @@ public class MapCanvas extends Canvas {
     }
 
     private void setupMouseHandlers() {
-        setOnScroll(e -> {
+        canvas.setOnScroll(e -> {
             double factor = e.getDeltaY() > 0 ? 1.1 : 0.9;
             double mx = e.getX();
             double my = e.getY();
@@ -158,12 +146,12 @@ public class MapCanvas extends Canvas {
             draw();
         });
 
-        setOnMousePressed(e -> {
+        canvas.setOnMousePressed(e -> {
             lastMouseX = e.getX();
             lastMouseY = e.getY();
         });
 
-        setOnMouseDragged(e -> {
+        canvas.setOnMouseDragged(e -> {
             offsetX += e.getX() - lastMouseX;
             offsetY += e.getY() - lastMouseY;
             lastMouseX = e.getX();
@@ -171,7 +159,7 @@ public class MapCanvas extends Canvas {
             draw();
         });
 
-        setOnMouseMoved(e -> {
+        canvas.setOnMouseMoved(e -> {
             if (mapData == null) return;
             int newHighlight = findProvinceAt(e.getX(), e.getY());
             if (newHighlight != highlightedIndex) {
@@ -210,5 +198,9 @@ public class MapCanvas extends Canvas {
 
     public MapData getMapData() {
         return mapData;
+    }
+
+    public double getHighlightedIndex() {
+        return highlightedIndex;
     }
 }
