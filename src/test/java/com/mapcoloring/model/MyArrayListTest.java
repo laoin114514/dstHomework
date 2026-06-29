@@ -65,4 +65,64 @@ class MyArrayListTest {
             assertEquals(i, list.get(i));
         }
     }
+
+    @Test
+    void testIndexOf() {
+        MyArrayList<String> list = new MyArrayList<>();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        assertEquals(0, list.indexOf("a"));
+        assertEquals(2, list.indexOf("c"));
+        assertEquals(-1, list.indexOf("x"));
+    }
+
+    @Test
+    void testIndexOfNull() {
+        MyArrayList<String> list = new MyArrayList<>();
+        list.add("a");
+        list.add(null);
+        list.add("c");
+        assertEquals(1, list.indexOf(null));
+        assertEquals(-1, list.indexOf("b"));
+    }
+
+    @Test
+    void testGetOutOfBounds() {
+        MyArrayList<String> list = new MyArrayList<>();
+        list.add("a");
+        assertThrows(IndexOutOfBoundsException.class, () -> list.get(1));
+        assertThrows(IndexOutOfBoundsException.class, () -> list.get(-1));
+    }
+
+    @Test
+    void testRemoveOutOfBounds() {
+        MyArrayList<String> list = new MyArrayList<>();
+        assertThrows(IndexOutOfBoundsException.class, () -> list.remove(0));
+    }
+
+    @Test
+    void testIterator() {
+        MyArrayList<String> list = new MyArrayList<>();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        int count = 0;
+        String[] expected = {"a", "b", "c"};
+        for (String s : list) {
+            assertEquals(expected[count], s);
+            count++;
+        }
+        assertEquals(3, count);
+    }
+
+    @Test
+    void testClearRemovesElements() {
+        MyArrayList<String> list = new MyArrayList<>();
+        list.add("a");
+        list.add("b");
+        list.clear();
+        assertEquals(-1, list.indexOf("a"));
+        assertThrows(IndexOutOfBoundsException.class, () -> list.get(0));
+    }
 }
