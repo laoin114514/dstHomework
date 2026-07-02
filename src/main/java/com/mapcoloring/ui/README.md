@@ -9,8 +9,10 @@
 | 类 | 父类 | 职责 |
 |----|------|------|
 | `MainApp` | `Application` | 程序入口，创建主窗口 |
-| `FrontPanel` | `BorderPane` | 着色界面：左侧地图 + 右侧控制面板 |
-| `MapCanvas` | `Pane` | 地图画布：渲染省份多边形、交互控制 |
+| `FrontPanel` | `BorderPane` | 着色界面：左侧地图 + 右侧控制面板（含动画控制） |
+| `MapCanvas` | `Pane` | 地图画布：渲染省份多边形、交互控制、单省着色 |
+| `ColoringStep` | — | 步骤模型：TRY / COMMIT / UNDO（纯数据类） |
+| `ColoringAnimator` | — | 动画控制器：Timeline 驱动逐帧播放步骤列表 |
 
 ## MainApp — 主窗口
 
@@ -19,12 +21,19 @@
 
 ## FrontPanel — 着色界面
 
-**布局**：`BorderPane`，左侧地图画布 + 右侧控制面板（200px 宽）
+**布局**：`BorderPane`，左侧地图画布 + 右侧控制面板（210px 宽）
 
-**控制面板按钮**：
+**控制面板**：
 - 三个算法按钮：贪心着色、贪心+排序、回溯求最优
+- **着色模式**：ToggleButton 组切换"瞬间着色"和"动画着色"
+  - 瞬间模式：直接显示最终结果（行为同旧版）
+  - 动画模式：逐省份填充动画，回溯展示 TRY/UNDO/COMMIT 过程
+- **动画速度**：Slider 滑块（30ms ~ 1000ms），仅动画模式下启用
 - 统计信息：颜色总数、算法耗时、当前算法名
+- **步骤进度**：动画播放时显示 "步骤：N / M"，实时更新
 - 重新加载按钮
+
+**动画播放中**：算法按钮、重新加载按钮、模式切换按钮全部禁用，播放完成后自动恢复。
 
 **启动行为**：构造时自动加载 `data/china.map`
 
@@ -46,6 +55,8 @@
 | 滚轮缩放 | 以鼠标位置为中心，缩放因子 1.1/0.9 |
 | 拖拽平移 | 记录鼠标按下位置，计算偏移量 |
 | 悬停高亮 | 射线法点-多边形碰撞检测，遍历所有省份 |
+| 单省着色 | `colorProvince(idx, color)` 给指定省份着色并重绘 |
+| 单省撤销 | `uncolorProvince(idx)` 取消指定省份颜色并重绘 |
 
 ### 点-多边形检测（射线法）
 
@@ -59,3 +70,31 @@
 - 布局约束变化
 
 每次调用时：获取当前可用空间 → 计算数据边界框 → 等比缩放适配画布 → 重绘全部省份。
+
+## ColoringStep — 步骤模型
+
+纯数据类，表示着色动画过程中的一个原子操作。
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `action` | `Action` 枚举 | TRY（试探）、COMMIT（确认）、UNDO（撤销） |
+| `provinceIndex` | `int` | 涉及的省份索引 |
+| `color` | `int` | 颜色编号（UNDO 时忽略） |
+| `description` | `String` | 中文描述，如 "新疆 ← 颜色1" |
+
+三种算法返回 `List<ColoringStep>` 给动画控制器播放。
+
+## ColoringAnimator — 动画控制器
+
+使用 JavaFX `Timeline` 驱动步骤列表的逐帧播放。
+
+| 方法 | 说明 |
+|------|------|
+| `play(steps, onFinished, onStep)` | 开始播放步骤列表 |
+| `pause()` / `resume()` | 暂停 / 继续播放 |
+| `stop()` | 停止播放并释放资源 |
+| `setSpeed(delayMs)` | 调整播放速度（30~1000ms） |
+| `isPlaying()` / `isPaused()` | 查询播放状态 |
+| `getCurrentStep()` / `getTotalSteps()` | 查询播放进度 |
+
+每帧根据 `ColoringStep.action` 调用 `MapCanvas.colorProvince()` 或 `uncolorProvince()`，播放完成后触发回调更新统计信息。
