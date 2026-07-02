@@ -196,6 +196,30 @@ public class MapCanvas extends Pane {
         return inside;
     }
 
+    /**
+     * 给单个省份着色并重绘画布。
+     * 供 ColoringAnimator 在动画播放时调用。
+     */
+    public void colorProvince(int index, int color) {
+        if (mapData == null || index < 0 || index >= mapData.graph.getVertexCount()) {
+            return;
+        }
+        mapData.graph.setColor(index, color);
+        draw();
+    }
+
+    /**
+     * 取消单个省份颜色（恢复灰色/未着色状态）并重绘画布。
+     * 供 ColoringAnimator 在回溯撤销时调用。
+     */
+    public void uncolorProvince(int index) {
+        if (mapData == null || index < 0 || index >= mapData.graph.getVertexCount()) {
+            return;
+        }
+        mapData.graph.setColor(index, 0);
+        draw();
+    }
+
     public MapData getMapData() {
         return mapData;
     }
