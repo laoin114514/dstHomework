@@ -1,6 +1,7 @@
 package com.mapcoloring.algorithm;
 
 import com.mapcoloring.model.Graph;
+import com.mapcoloring.ui.ColoringStep;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,6 +21,13 @@ class GreedyColoringTest {
         assertNotEquals(g.getColor(0), g.getColor(1));
         assertNotEquals(g.getColor(1), g.getColor(2));
         assertTrue(result.colorCount >= 2);
+
+        // 新增：验证步骤列表
+        assertNotNull(result.steps);
+        assertEquals(3, result.steps.size());
+        for (ColoringStep step : result.steps) {
+            assertEquals(ColoringStep.Action.COMMIT, step.action);
+        }
     }
 
     @Test
@@ -34,5 +42,7 @@ class GreedyColoringTest {
 
         ColoringResult result = GreedyColoring.color(g);
         assertEquals(3, result.colorCount);
+        assertNotNull(result.steps);
+        assertEquals(3, result.steps.size());
     }
 }

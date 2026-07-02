@@ -2,12 +2,17 @@ package com.mapcoloring.algorithm;
 
 import com.mapcoloring.model.Graph;
 import com.mapcoloring.model.MyArrayList;
+import com.mapcoloring.ui.ColoringStep;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GreedyColoring {
 
     public static ColoringResult color(Graph g) {
         long start = System.nanoTime();
         g.resetColors();
+
+        List<ColoringStep> steps = new ArrayList<>();
 
         for (int i = 0; i < g.getVertexCount(); i++) {
             MyArrayList<Integer> neighborColors = new MyArrayList<>();
@@ -20,6 +25,8 @@ public class GreedyColoring {
             }
             int color = SortUtil.findSmallestUnusedColor(neighborColors);
             g.setColor(i, color);
+            steps.add(new ColoringStep(ColoringStep.Action.COMMIT,
+                    i, color, g.getVertexName(i)));
         }
 
         int maxColor = 0;
@@ -29,6 +36,6 @@ public class GreedyColoring {
             }
         }
         long elapsed = System.nanoTime() - start;
-        return new ColoringResult(maxColor, elapsed);
+        return new ColoringResult(maxColor, elapsed, steps);
     }
 }
